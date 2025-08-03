@@ -1,0 +1,311 @@
+# Advanced Unitas LogistiX Website Redesign - Replit Project
+
+## Project Overview
+Redesign and develop an advanced logistics website for Unitas LogistiX with modern features, enhanced functionality, and professional design. The website should incorporate all features from ONS Logistics while adding advanced capabilities for better user experience.
+
+## Tech Stack Recommendation
+- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
+- **Framework**: Bootstrap 5 or Tailwind CSS for responsive design
+- **Backend**: Node.js with Express.js
+- **Database**: MongoDB or PostgreSQL
+- **Additional Libraries**: 
+  - Chart.js for analytics
+  - Leaflet.js for maps
+  - Socket.io for real-time tracking
+  - EmailJS for contact forms
+
+## Core Features to Implement
+
+### 1. Homepage Features
+```
+- Modern hero section with animated elements
+- Service overview cards with hover effects
+- Company statistics counter
+- Client testimonials carousel
+- Latest news/updates section
+- Call-to-action buttons
+```
+
+### 2. Advanced Tracking System
+```
+- Real-time shipment tracking
+- Interactive tracking timeline
+- GPS location mapping
+- Push notifications for status updates
+- Multi-language tracking interface
+- Export tracking reports (PDF/Excel)
+```
+
+### 3. Service Pages
+```
+- Freight Forwarding (Air/Sea/Land)
+- Custom House Agent services
+- Road Transportation
+- Warehousing & Distribution
+- Import/Export Consultation
+- Licensing Support
+- Insurance Services
+```
+
+### 4. Advanced Features
+```
+- User Dashboard/Portal
+- Quote Request System
+- Document Management
+- Invoice Generation
+- Multi-currency pricing
+- API integration for rates
+- Mobile-responsive design
+- PWA capabilities
+```
+
+### 5. Interactive Elements
+```
+- Service calculator
+- Route optimizer
+- Cost estimator
+- Document checklist
+- FAQ chatbot
+- Live chat support
+```
+
+## File Structure
+```
+project-root/
+├── index.html
+├── css/
+│   ├── style.css
+│   ├── responsive.css
+│   └── animations.css
+├── js/
+│   ├── main.js
+│   ├── tracking.js
+│   ├── calculator.js
+│   └── animations.js
+├── pages/
+│   ├── about.html
+│   ├── services.html
+│   ├── tracking.html
+│   ├── contact.html
+│   └── dashboard.html
+├── assets/
+│   ├── images/
+│   ├── icons/
+│   └── documents/
+├── server/
+│   ├── app.js
+│   ├── routes/
+│   └── models/
+└── package.json
+```
+
+## Development Phases
+
+### Phase 1: Foundation (Week 1)
+- Set up project structure
+- Create responsive layout
+- Implement navigation system
+- Design homepage sections
+
+### Phase 2: Core Features (Week 2)
+- Develop service pages
+- Implement contact system
+- Create tracking interface
+- Add interactive elements
+
+### Phase 3: Advanced Features (Week 3)
+- User authentication system
+- Dashboard development
+- API integrations
+- Real-time features
+
+### Phase 4: Optimization (Week 4)
+- Performance optimization
+- SEO implementation
+- Testing and debugging
+- Mobile optimization
+
+## Code Quality Guidelines
+
+### HTML Structure
+```html
+<!-- Use semantic HTML5 elements -->
+<header>
+<nav>
+<main>
+<section>
+<article>
+<aside>
+<footer>
+
+<!-- Add proper meta tags -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Professional logistics services">
+```
+
+### CSS Best Practices
+```css
+/* Use CSS custom properties for consistency */
+:root {
+  --primary-color: #2c5aa0;
+  --secondary-color: #f8f9fa;
+  --accent-color: #ffc107;
+}
+
+/* Use BEM methodology for class naming */
+.navbar {}
+.navbar__item {}
+.navbar__item--active {}
+```
+
+### JavaScript Guidelines
+```javascript
+// Use modern ES6+ syntax
+// Add comprehensive comments
+// Implement error handling
+// Use async/await for API calls
+
+/**
+ * Initialize tracking system
+ * @param {string} trackingNumber - The shipment tracking number
+ * @returns {Promise} Tracking data
+ */
+async function initializeTracking(trackingNumber) {
+  try {
+    // Implementation here
+  } catch (error) {
+    console.error('Tracking initialization failed:', error);
+  }
+}
+```
+
+## Key Pages to Develop
+
+### 1. Homepage (index.html)
+- Hero section with company mission
+- Services overview grid
+- Why choose us section
+- Statistics counter
+- Client testimonials
+- Latest updates
+
+### 2. Services Page
+- Comprehensive service listings
+- Service details with icons
+- Pricing information
+- Request quote forms
+
+### 3. Tracking Page
+- Advanced tracking interface
+- Real-time status updates
+- Interactive timeline
+- Map integration
+- Export options
+
+### 4. About Page
+- Company history
+- Team profiles
+- Certifications
+- Global network map
+
+### 5. Contact Page
+- Multi-location offices
+- Interactive contact form
+- Google Maps integration
+- Social media links
+
+## Advanced Features Implementation
+
+### Real-time Tracking System
+```javascript
+// WebSocket connection for real-time updates
+const socket = io();
+
+// Track shipment function
+function trackShipment(trackingId) {
+  socket.emit('track-shipment', trackingId);
+  
+  socket.on('shipment-update', (data) => {
+    updateTrackingDisplay(data);
+  });
+}
+```
+
+### Quote Calculator
+```javascript
+// Dynamic pricing calculator
+class ShippingCalculator {
+  constructor() {
+    this.rates = {};
+    this.init();
+  }
+  
+  calculateCost(origin, destination, weight, service) {
+    // Calculation logic with comments
+  }
+}
+```
+
+### Dashboard Features
+- User authentication
+- Shipment history
+- Document storage
+- Invoice management
+- Analytics charts
+
+## Responsive Design Requirements
+- Mobile-first approach
+- Breakpoints: 320px, 768px, 1024px, 1200px
+- Touch-friendly interface
+- Fast loading times
+- Optimized images
+
+## SEO Optimization
+- Semantic HTML structure
+- Meta tags optimization
+- Open Graph tags
+- Schema markup for logistics
+- Site speed optimization
+- Mobile-friendly design
+
+## Security Considerations
+- Input validation
+- CSRF protection
+- SQL injection prevention
+- Secure authentication
+- HTTPS implementation
+- Data encryption
+
+## Testing Strategy
+- Cross-browser compatibility
+- Mobile device testing
+- Performance testing
+- User experience testing
+- Security testing
+
+## Deployment Checklist
+- Code minification
+- Image optimization
+- CDN setup
+- SSL certificate
+- Analytics integration
+- Error monitoring
+
+## Additional Resources
+- Design inspiration from modern logistics websites
+- Icon libraries (FontAwesome, Feather Icons)
+- Stock images for logistics industry
+- Color palette generators
+- Typography selection guides
+
+## Success Metrics
+- Page load speed < 3 seconds
+- Mobile-friendly score > 90
+- SEO score > 85
+- User engagement metrics
+- Conversion rate tracking
+
+---
+
+**Note**: Ensure all code is well-commented, follows best practices, and is maintainable for future updates. Focus on user experience and professional presentation suitable for B2B logistics clients.
