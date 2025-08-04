@@ -72,7 +72,7 @@ export function Navbar() {
           <div className="hidden md:flex items-center gap-8">
             {navigationItems.map((item) => (
               <Link key={item.href} href={item.href}>
-                <motion.a
+                <motion.span
                   className={`font-medium transition-colors relative cursor-pointer ${
                     isActive(item.href)
                       ? "text-blue-600"
@@ -87,7 +87,7 @@ export function Navbar() {
                       layoutId="activeIndicator"
                     />
                   )}
-                </motion.a>
+                </motion.span>
               </Link>
             ))}
             
@@ -125,18 +125,11 @@ export function Navbar() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 ) : (
-                  <>
-                    <Link href="/signin">
-                      <Button variant="ghost" className="font-medium">
-                        Sign In
-                      </Button>
-                    </Link>
-                    <Link href="/signup">
-                      <Button className="btn-logistics-outline">
-                        Sign Up
-                      </Button>
-                    </Link>
-                  </>
+                  <Link href="/signin">
+                    <Button className="btn-logistics-primary">
+                      Join Us
+                    </Button>
+                  </Link>
                 )
               )}
             </div>
@@ -154,7 +147,7 @@ export function Navbar() {
                 <div className="flex flex-col gap-4 mt-8">
                   {navigationItems.map((item) => (
                     <Link key={item.href} href={item.href}>
-                      <motion.a
+                      <motion.span
                         className={`block py-2 px-4 rounded-lg font-medium transition-colors cursor-pointer ${
                           isActive(item.href)
                             ? "bg-blue-100 text-blue-600"
@@ -164,7 +157,7 @@ export function Navbar() {
                         whileTap={{ scale: 0.95 }}
                       >
                         {item.label}
-                      </motion.a>
+                      </motion.span>
                     </Link>
                   ))}
                   <Button 
@@ -199,22 +192,13 @@ export function Navbar() {
                         </Button>
                       </div>
                     ) : (
-                      <div className="border-t pt-4 mt-4 space-y-2">
+                      <div className="border-t pt-4 mt-4">
                         <Link href="/signin">
                           <Button 
-                            variant="ghost" 
-                            className="w-full"
+                            className="btn-logistics-primary w-full"
                             onClick={() => setIsOpen(false)}
                           >
-                            Sign In
-                          </Button>
-                        </Link>
-                        <Link href="/signup">
-                          <Button 
-                            className="btn-logistics-outline w-full"
-                            onClick={() => setIsOpen(false)}
-                          >
-                            Sign Up
+                            Join Us
                           </Button>
                         </Link>
                       </div>

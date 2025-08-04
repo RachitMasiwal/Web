@@ -8,13 +8,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Truck, Eye, EyeOff } from "lucide-react";
+import { Truck, Eye, EyeOff, Users, Shield } from "lucide-react";
 import { signInSchema, type SignIn } from "@shared/schema";
 import { useSignIn } from "@/hooks/useAuth";
 
 export default function SignInPage() {
   const [, setLocation] = useLocation();
   const [showPassword, setShowPassword] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<'customer' | 'admin' | null>(null);
   const { toast } = useToast();
   const signInMutation = useSignIn();
 
@@ -60,11 +61,67 @@ export default function SignInPage() {
             </div>
             <CardTitle className="text-2xl font-bold text-gray-900">Welcome Back</CardTitle>
             <CardDescription className="text-gray-600">
-              Sign in to your account to continue
+              Choose your role and sign in to continue
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {!selectedRole ? (
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-gray-900 text-center mb-6">Select Your Role</h3>
+                <div className="grid grid-cols-1 gap-4">
+                  <Button
+                    variant="outline"
+                    className="h-16 flex flex-col items-center justify-center gap-2 hover:bg-blue-50 hover:border-blue-300"
+                    onClick={() => setSelectedRole('customer')}
+                  >
+                    <Users className="w-6 h-6 text-blue-600" />
+                    <span className="font-medium">Customer Portal</span>
+                    <span className="text-xs text-gray-500">Access your shipments and quotes</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="h-16 flex flex-col items-center justify-center gap-2 hover:bg-blue-50 hover:border-blue-300"
+                    onClick={() => setSelectedRole('admin')}
+                  >
+                    <Shield className="w-6 h-6 text-blue-600" />
+                    <span className="font-medium">Admin Portal</span>
+                    <span className="text-xs text-gray-500">Manage operations and clients</span>
+                  </Button>
+                </div>
+                
+                <div className="text-center text-sm text-gray-600 mt-6">
+                  Don't have an account?{" "}
+                  <Link href="/signup">
+                    <a className="text-blue-600 hover:text-blue-800 font-medium">
+                      Sign Up
+                    </a>
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-2">
+                    {selectedRole === 'customer' ? (
+                      <Users className="w-5 h-5 text-blue-600" />
+                    ) : (
+                      <Shield className="w-5 h-5 text-blue-600" />
+                    )}
+                    <span className="font-medium text-gray-900">
+                      {selectedRole === 'customer' ? 'Customer Portal' : 'Admin Portal'}
+                    </span>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSelectedRole(null)}
+                    className="text-blue-600 hover:text-blue-800"
+                  >
+                    Change Role
+                  </Button>
+                </div>
+                
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -115,15 +172,17 @@ export default function SignInPage() {
                 {signInMutation.isPending ? "Signing In..." : "Sign In"}
               </Button>
 
-              <div className="text-center text-sm text-gray-600">
-                Don't have an account?{" "}
-                <Link href="/signup">
-                  <a className="text-blue-600 hover:text-blue-800 font-medium">
-                    Sign Up
-                  </a>
-                </Link>
+                  <div className="text-center text-sm text-gray-600">
+                    Don't have an account?{" "}
+                    <Link href="/signup">
+                      <a className="text-blue-600 hover:text-blue-800 font-medium">
+                        Sign Up
+                      </a>
+                    </Link>
+                  </div>
+                </form>
               </div>
-            </form>
+            )}
           </CardContent>
         </Card>
       </motion.div>

@@ -67,14 +67,25 @@ export function ServicesOverview() {
           </p>
         </motion.div>
 
-        <StaggeredReveal className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          variants={staggerContainer}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true }}
+        >
           {services.map((service, index) => (
-            <RevealItem key={service.title} className="h-full">
-              <MorphingCard 
-                className="h-full"
-                glowEffect={true}
-                hoverColor="rgba(59, 130, 246, 0.05)"
-              >
+            <motion.div
+              key={service.title}
+              variants={fadeInUp}
+              whileHover={{ 
+                y: -10,
+                scale: 1.02,
+                transition: { duration: 0.3 }
+              }}
+              className="h-full"
+            >
+              <Card className="service-card h-full relative overflow-hidden group">
                 <CardHeader className="text-center pb-4">
                   <motion.div
                     className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center text-white shadow-lg animate-morphing"
@@ -129,28 +140,34 @@ export function ServicesOverview() {
                       </motion.li>
                     ))}
                   </motion.ul>
-                  <MagneticButton 
+                  <Button 
                     variant="outline" 
-                    className="btn-logistics-outline gradient-border"
+                    className="btn-logistics-outline"
                   >
                     Learn More
-                  </MagneticButton>
+                  </Button>
                 </CardContent>
-              </MorphingCard>
-            </RevealItem>
+              </Card>
+            </motion.div>
           ))}
-        </StaggeredReveal>
+        </motion.div>
 
-        <ScrollReveal direction="up" delay={0.3} className="text-center mt-12">
+        <motion.div 
+          className="text-center mt-12"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          viewport={{ once: true }}
+        >
           <Link href="/services">
-            <MagneticButton 
-              size="lg" 
-              className="btn-logistics-primary btn-3d animate-shimmer"
+            <Button 
+              size="lg"
+              className="btn-logistics-primary"
             >
               View All Services
-            </MagneticButton>
+            </Button>
           </Link>
-        </ScrollReveal>
+        </motion.div>
       </div>
     </section>
   );

@@ -29,10 +29,10 @@ export function HeroSection() {
               <AnimatedText
                 text="Global Logistics"
                 variant="typewriter"
-                className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight"
+                className="text-4xl md:text-5xl lg:text-7xl font-bold text-white leading-tight tracking-tight"
               />
               <motion.span
-                className="block text-yellow-400 text-4xl md:text-5xl lg:text-6xl font-bold text-gradient-animate"
+                className="block text-yellow-300 text-4xl md:text-5xl lg:text-7xl font-bold leading-tight tracking-tight bg-gradient-to-r from-yellow-300 to-yellow-400 bg-clip-text text-transparent"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, delay: 1.5 }}
