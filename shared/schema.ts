@@ -1,12 +1,29 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp, integer, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, integer, boolean, index, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Session storage table for authentication
+export const sessions = pgTable(
+  "sessions",
+  {
+    sid: varchar("sid").primaryKey(),
+    sess: jsonb("sess").notNull(),
+    expire: timestamp("expire").notNull(),
+  },
+  (table) => [index("IDX_session_expire").on(table.expire)],
+);
+
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  username: text("username").notNull().unique(),
+  email: text("email").notNull().unique(),
   password: text("password").notNull(),
+  firstName: text("first_name").notNull(),
+  companyName: text("company_name").notNull(),
+  phoneNumber: text("phone_number").notNull(),
+  einBusinessNumber: text("ein_business_number").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export const contacts = pgTable("contacts", {
@@ -54,9 +71,42 @@ export const trackingEvents = pgTable("tracking_events", {
   timestamp: timestamp("timestamp").defaultNow(),
 });
 
+// Authentication schemas
+export const signUpSchema = createInsertSchema(users)
+  .pick({
+    firstName: true,
+    companyName: true,
+    phoneNumber: true,
+    einBusinessNumber: true,
+    email: true,
+    password: true,
+  })
+  .extend({
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    email: z.string().email("Invalid email format"),
+    recaptcha: z.string().min(1, "Please complete the reCAPTCHA"),
+  });
+
+export const signInSchema = z.object({
+  email: z.string().email("Invalid email format"),
+  password: z.string().min(1, "Password is required"),
+  recaptcha: z.string().min(1, "Please complete the reCAPTCHA"),
+});
+
+export const getQuoteSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  contactNumber: z.string().min(1, "Contact number is required"),
+  email: z.string().email("Invalid email format"),
+  companyName: z.string().min(1, "Company name is required"),
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
+  email: true,
   password: true,
+  firstName: true,
+  companyName: true,
+  phoneNumber: true,
+  einBusinessNumber: true,
 });
 
 export const insertContactSchema = createInsertSchema(contacts).pick({
@@ -84,6 +134,9 @@ export const trackingRequestSchema = z.object({
   serviceType: z.string().optional(),
 });
 
+export type SignUp = z.infer<typeof signUpSchema>;
+export type SignIn = z.infer<typeof signInSchema>;
+export type GetQuote = z.infer<typeof getQuoteSchema>;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type InsertContact = z.infer<typeof insertContactSchema>;

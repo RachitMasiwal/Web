@@ -10,6 +10,8 @@ import Services from "@/pages/services";
 import Tracking from "@/pages/tracking";
 import About from "@/pages/about";
 import Contact from "@/pages/contact";
+import SignUp from "@/pages/sign-up";
+import SignIn from "@/pages/sign-in";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -20,6 +22,8 @@ function Router() {
       <Route path="/tracking" component={Tracking} />
       <Route path="/about" component={About} />
       <Route path="/contact" component={Contact} />
+      <Route path="/signup" component={SignUp} />
+      <Route path="/signin" component={SignIn} />
       <Route component={NotFound} />
     </Switch>
   );

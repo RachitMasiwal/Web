@@ -3,11 +3,19 @@ import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Truck, Menu, X } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { GetQuoteModal } from "@/components/get-quote-modal";
+import { Truck, Menu, User, LogOut } from "lucide-react";
+import { useAuth, useSignOut } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
 
 export function Navbar() {
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
+  const { user, isAuthenticated, isLoading } = useAuth();
+  const signOutMutation = useSignOut();
+  const { toast } = useToast();
 
   const navigationItems = [
     { href: "/", label: "Home" },
@@ -21,6 +29,22 @@ export function Navbar() {
     if (href === "/" && location === "/") return true;
     if (href !== "/" && location.startsWith(href)) return true;
     return false;
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOutMutation.mutateAsync();
+      toast({
+        title: "Signed out successfully",
+        description: "See you next time!",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Sign out failed",
+        description: "Please try again",
+      });
+    }
   };
 
   return (
@@ -66,11 +90,56 @@ export function Navbar() {
                 </motion.a>
               </Link>
             ))}
-            <Link href="/contact">
-              <Button className="btn-logistics-primary">
+            
+            <div className="flex items-center gap-3">
+              <Button 
+                className="btn-logistics-primary"
+                onClick={() => setIsQuoteModalOpen(true)}
+              >
                 Get Quote
               </Button>
-            </Link>
+              
+              {!isLoading && (
+                isAuthenticated ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="rounded-full">
+                        <User className="w-5 h-5" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <div className="px-2 py-1.5 text-sm font-medium text-gray-900">
+                        {user?.firstName || "User"}
+                      </div>
+                      <div className="px-2 py-1.5 text-xs text-gray-500">
+                        {user?.email}
+                      </div>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem 
+                        onClick={handleSignOut}
+                        className="text-red-600 focus:text-red-600"
+                      >
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Sign Out
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <>
+                    <Link href="/signin">
+                      <Button variant="ghost" className="font-medium">
+                        Sign In
+                      </Button>
+                    </Link>
+                    <Link href="/signup">
+                      <Button className="btn-logistics-outline">
+                        Sign Up
+                      </Button>
+                    </Link>
+                  </>
+                )
+              )}
+            </div>
           </div>
 
           {/* Mobile Menu */}
@@ -98,20 +167,70 @@ export function Navbar() {
                       </motion.a>
                     </Link>
                   ))}
-                  <Link href="/contact">
-                    <Button 
-                      className="btn-logistics-primary w-full mt-4"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      Get Quote
-                    </Button>
-                  </Link>
+                  <Button 
+                    className="btn-logistics-primary w-full mt-4"
+                    onClick={() => {
+                      setIsOpen(false);
+                      setIsQuoteModalOpen(true);
+                    }}
+                  >
+                    Get Quote
+                  </Button>
+                  
+                  {!isLoading && (
+                    isAuthenticated ? (
+                      <div className="border-t pt-4 mt-4">
+                        <div className="px-4 py-2 text-sm font-medium text-gray-900">
+                          {user?.firstName || "User"}
+                        </div>
+                        <div className="px-4 py-1 text-xs text-gray-500">
+                          {user?.email}
+                        </div>
+                        <Button 
+                          variant="ghost" 
+                          className="w-full mt-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                          onClick={() => {
+                            setIsOpen(false);
+                            handleSignOut();
+                          }}
+                        >
+                          <LogOut className="w-4 h-4 mr-2" />
+                          Sign Out
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="border-t pt-4 mt-4 space-y-2">
+                        <Link href="/signin">
+                          <Button 
+                            variant="ghost" 
+                            className="w-full"
+                            onClick={() => setIsOpen(false)}
+                          >
+                            Sign In
+                          </Button>
+                        </Link>
+                        <Link href="/signup">
+                          <Button 
+                            className="btn-logistics-outline w-full"
+                            onClick={() => setIsOpen(false)}
+                          >
+                            Sign Up
+                          </Button>
+                        </Link>
+                      </div>
+                    )
+                  )}
                 </div>
               </SheetContent>
             </Sheet>
           </div>
         </div>
       </div>
+      
+      <GetQuoteModal 
+        isOpen={isQuoteModalOpen} 
+        onClose={() => setIsQuoteModalOpen(false)} 
+      />
     </motion.nav>
   );
 }
