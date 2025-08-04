@@ -8,6 +8,14 @@ This is a modern logistics and freight forwarding website for Unitas LogistiX, b
 
 Preferred communication style: Simple, everyday language.
 
+## Recent Changes (December 2024)
+
+- **Migration Complete**: Successfully migrated from Replit Agent to full Replit environment
+- **Authentication System**: Added complete user authentication with sign up/sign in functionality
+- **Database Integration**: Upgraded from in-memory storage to PostgreSQL with proper session management
+- **UI Enhancements**: Fixed button styling issues and added responsive authentication pages
+- **Security Features**: Implemented bcrypt password hashing and secure session storage
+
 ## System Architecture
 
 ### Frontend Architecture
