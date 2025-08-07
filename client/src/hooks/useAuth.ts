@@ -21,7 +21,8 @@ export function useSignUp() {
   
   return useMutation({
     mutationFn: async (data: SignUp) => {
-      return apiRequest("/api/auth/signup", "POST", data);
+      const response = await apiRequest("/api/auth/signup", data);
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
@@ -34,7 +35,8 @@ export function useSignIn() {
   
   return useMutation({
     mutationFn: async (data: SignIn) => {
-      return apiRequest("/api/auth/signin", "POST", data);
+      const response = await apiRequest("/api/auth/signin", data);
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
@@ -47,7 +49,8 @@ export function useSignOut() {
   
   return useMutation({
     mutationFn: async () => {
-      return apiRequest("/api/auth/signout", "POST");
+      const response = await apiRequest("/api/auth/signout", {}, { method: "POST" });
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
