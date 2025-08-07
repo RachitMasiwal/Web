@@ -1,7 +1,8 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import session from "express-session";
-import connectPg from "connect-pg-simple";
+import MemoryStore from "memorystore";
+// import connectPg from "connect-pg-simple";
 import bcrypt from "bcryptjs";
 import { storage } from "./storage";
 import { insertContactSchema, insertQuoteSchema, trackingRequestSchema, signUpSchema, signInSchema, getQuoteSchema, jobFilterSchema, invoiceFilterSchema, sendRequestSchema, changePasswordSchema, updateProfileSchema } from "@shared/schema";
@@ -16,25 +17,18 @@ const isAuthenticated = (req: any, res: any, next: any) => {
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Session configuration
-  const sessionTtl = 7 * 24 * 60 * 60 * 1000; // 1 week
-  const pgStore = connectPg(session);
-  const sessionStore = new pgStore({
-    conString: process.env.DATABASE_URL,
-    createTableIfMissing: true,
-    ttl: sessionTtl,
-    tableName: "sessions",
-  });
-
+  // Session configuration with memory store for development
   app.use(session({
     secret: process.env.SESSION_SECRET || 'logistics-session-secret-key-dev',
-    store: sessionStore,
+    store: new (MemoryStore(session))({
+      checkPeriod: 86400000, // prune expired entries every 24h
+    }),
     resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      maxAge: sessionTtl,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
     },
   }));
   // Contact form submission
@@ -97,7 +91,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/auth/signup", async (req, res) => {
     try {
       const validatedData = signUpSchema.parse(req.body);
-      const { recaptcha, ...userData } = validatedData;
+      const { recaptcha, confirmPassword, ...userData } = validatedData;
       
       // Check if user already exists
       const existingUser = await storage.getUserByEmail(userData.email);
@@ -148,7 +142,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Verify password
       const isValidPassword = await bcrypt.compare(credentials.password, user.password);
       if (!isValidPassword) {
-        res.status(401).json({ error: "Invalid credentials" });
+        res.status(401).json({ error: "Invalid email or password" });
         return;
       }
       

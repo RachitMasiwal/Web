@@ -1,3 +1,4 @@
+import React from "react";
 import { Switch, Route, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
@@ -23,12 +24,18 @@ import NotFound from "@/pages/not-found";
 
 // Protected route wrapper
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
   
   const { data: user, isLoading, error } = useQuery({
     queryKey: ["/api/auth/user"],
     retry: false,
   });
+
+  React.useEffect(() => {
+    if (!isLoading && (error || !user)) {
+      setLocation("/signin");
+    }
+  }, [isLoading, error, user, setLocation]);
 
   if (isLoading) {
     return (
@@ -39,7 +46,6 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
   }
 
   if (error || !user) {
-    setLocation("/signin");
     return null;
   }
 

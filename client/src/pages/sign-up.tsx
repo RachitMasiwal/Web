@@ -25,6 +25,7 @@ const generateValidationCode = () => {
 export default function SignUpPage() {
   const [, setLocation] = useLocation();
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [validationCode, setValidationCode] = useState('');
   const [userCode, setUserCode] = useState('');
   const { toast } = useToast();
@@ -44,6 +45,7 @@ export default function SignUpPage() {
       einBusinessNumber: "",
       email: "",
       password: "",
+      confirmPassword: "",
       recaptcha: "test-token", // In real app, this would be from reCAPTCHA
     },
   });
@@ -191,6 +193,20 @@ export default function SignUpPage() {
                 </div>
                 {form.formState.errors.password && (
                   <p className="text-sm text-red-600">{form.formState.errors.password.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="Confirm your password"
+                  {...form.register("confirmPassword")}
+                  className="h-11"
+                />
+                {form.formState.errors.confirmPassword && (
+                  <p className="text-sm text-red-600">{form.formState.errors.confirmPassword.message}</p>
                 )}
               </div>
 
