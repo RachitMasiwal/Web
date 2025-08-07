@@ -71,8 +71,10 @@ export default function SignInPage() {
       toast({
         variant: "destructive",
         title: "Sign in failed",
-        description: error.message || "Please check your credentials",
+        description: error.message || "Invalid credentials",
       });
+      // Refresh captcha after failed login
+      refreshValidationCode();
     }
   };
 

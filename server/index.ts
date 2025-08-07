@@ -1,8 +1,26 @@
 import express, { type Request, Response, NextFunction } from "express";
+import compression from "compression";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
+
+// Enable gzip compression for better performance
+app.use(compression());
+
+// Add caching headers for static assets
+app.use((req, res, next) => {
+  // Cache static assets for 1 year
+  if (req.url.match(/\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$/)) {
+    res.setHeader('Cache-Control', 'public, max-age=31536000');
+  }
+  // Cache API responses for 5 minutes (except auth)
+  else if (req.url.startsWith('/api/') && !req.url.includes('/auth/')) {
+    res.setHeader('Cache-Control', 'public, max-age=300');
+  }
+  next();
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

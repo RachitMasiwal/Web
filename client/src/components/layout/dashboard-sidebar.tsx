@@ -59,9 +59,9 @@ export function DashboardSidebar() {
           <Building2 className="h-8 w-8" />
           <div>
             <div className="text-sm font-medium opacity-90">
-              onslogisticsindia@cargo.co.uk
+              info@unitaslogistix.com
             </div>
-            <div className="text-lg font-bold">ONS LOGISTICS INDIA PVT. LTD.</div>
+            <div className="text-lg font-bold">UNITAS LOGISTIX INC.</div>
             <div className="text-xs opacity-75">International Freight Forwarders</div>
           </div>
         </div>
