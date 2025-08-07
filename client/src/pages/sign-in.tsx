@@ -66,7 +66,7 @@ export default function SignInPage() {
         title: "Welcome back!",
         description: "You have been signed in successfully",
       });
-      setLocation("/");
+      setLocation("/dashboard");
     } catch (error: any) {
       toast({
         variant: "destructive",

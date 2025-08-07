@@ -4,7 +4,7 @@ import session from "express-session";
 import connectPg from "connect-pg-simple";
 import bcrypt from "bcryptjs";
 import { storage } from "./storage";
-import { insertContactSchema, insertQuoteSchema, trackingRequestSchema, signUpSchema, signInSchema, getQuoteSchema } from "@shared/schema";
+import { insertContactSchema, insertQuoteSchema, trackingRequestSchema, signUpSchema, signInSchema, getQuoteSchema, jobFilterSchema, invoiceFilterSchema, sendRequestSchema, changePasswordSchema, updateProfileSchema } from "@shared/schema";
 import { z } from "zod";
 
 // Middleware for authentication
@@ -221,6 +221,148 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true, message: "Subscribed to newsletter" });
     } catch (error) {
       res.status(500).json({ error: "Failed to subscribe to newsletter" });
+    }
+  });
+
+  // Dashboard API routes (require authentication)
+  
+  // Get dashboard stats
+  app.get("/api/dashboard/stats", isAuthenticated, async (req, res) => {
+    try {
+      const user = (req as any).session.user;
+      const stats = await storage.getDashboardStats(user.id);
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch dashboard stats" });
+    }
+  });
+
+  // Job management routes
+  app.get("/api/jobs", isAuthenticated, async (req, res) => {
+    try {
+      const user = (req as any).session.user;
+      const filter = jobFilterSchema.parse(req.query);
+      const jobs = await storage.getJobs(user.id, filter);
+      res.json(jobs);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ error: "Invalid filter parameters", details: error.errors });
+      } else {
+        res.status(500).json({ error: "Failed to fetch jobs" });
+      }
+    }
+  });
+
+  app.get("/api/jobs/:id", isAuthenticated, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const job = await storage.getJobById(id);
+      if (!job) {
+        res.status(404).json({ error: "Job not found" });
+        return;
+      }
+      
+      const files = await storage.getJobFiles(id);
+      res.json({ job, files });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch job details" });
+    }
+  });
+
+  // Bill/Invoice management routes
+  app.get("/api/bills", isAuthenticated, async (req, res) => {
+    try {
+      const user = (req as any).session.user;
+      const filter = invoiceFilterSchema.parse(req.query);
+      const bills = await storage.getBills(user.id, filter);
+      res.json(bills);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ error: "Invalid filter parameters", details: error.errors });
+      } else {
+        res.status(500).json({ error: "Failed to fetch bills" });
+      }
+    }
+  });
+
+  // Request management routes
+  app.post("/api/requests", isAuthenticated, async (req, res) => {
+    try {
+      const user = (req as any).session.user;
+      const validatedData = sendRequestSchema.parse(req.body);
+      const request = await storage.createRequest(user.id, validatedData);
+      res.json({ success: true, request });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ error: "Invalid input", details: error.errors });
+      } else {
+        res.status(500).json({ error: "Failed to create request" });
+      }
+    }
+  });
+
+  app.get("/api/requests", isAuthenticated, async (req, res) => {
+    try {
+      const user = (req as any).session.user;
+      const requests = await storage.getRequests(user.id);
+      res.json(requests);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch requests" });
+    }
+  });
+
+  // Profile management routes
+  app.put("/api/profile", isAuthenticated, async (req, res) => {
+    try {
+      const user = (req as any).session.user;
+      const validatedData = updateProfileSchema.parse(req.body);
+      const updatedUser = await storage.updateUserProfile(user.id, validatedData);
+      
+      // Update session
+      const { password, ...userWithoutPassword } = updatedUser;
+      (req as any).session.user = userWithoutPassword;
+      
+      res.json({ success: true, user: userWithoutPassword });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ error: "Invalid input", details: error.errors });
+      } else {
+        res.status(500).json({ error: "Failed to update profile" });
+      }
+    }
+  });
+
+  // Change password route
+  app.post("/api/auth/change-password", isAuthenticated, async (req, res) => {
+    try {
+      const user = (req as any).session.user;
+      const validatedData = changePasswordSchema.parse(req.body);
+      
+      // Get current user with password
+      const currentUser = await storage.getUser(user.id);
+      if (!currentUser) {
+        res.status(404).json({ error: "User not found" });
+        return;
+      }
+      
+      // Verify current password
+      const isValidPassword = await bcrypt.compare(validatedData.currentPassword, currentUser.password);
+      if (!isValidPassword) {
+        res.status(400).json({ error: "Current password is incorrect" });
+        return;
+      }
+      
+      // Hash new password and update
+      const hashedPassword = await bcrypt.hash(validatedData.newPassword, 12);
+      await storage.updateUserPassword(user.id, hashedPassword);
+      
+      res.json({ success: true, message: "Password updated successfully" });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ error: "Invalid input", details: error.errors });
+      } else {
+        res.status(500).json({ error: "Failed to change password" });
+      }
     }
   });
 

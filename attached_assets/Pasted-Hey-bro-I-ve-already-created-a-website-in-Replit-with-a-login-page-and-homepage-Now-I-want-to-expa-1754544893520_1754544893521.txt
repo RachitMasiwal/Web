@@ -1,0 +1,64 @@
+Hey bro, I’ve already created a website in Replit with a login page and homepage. Now I want to expand it with new features, and I want **all new pages to match the existing theme, layout, font, and styles**.
+
+🧩 PART 1 – SIGN-IN PAGE:
+- Simple login page with email and password.
+- Add "Forgot email or password" option.
+- No need to verify old password during reset.
+- Include "Change Password" option.
+- After login, redirect user to the main dashboard.
+
+📊 PART 2 – DASHBOARD (like image on Page 1 of my PDF):
+- Left Sidebar: Dashboard | Invoice List | Send Request | Profile | Logout
+- Dashboard Page must show:
+  - Total number of jobs
+  - Pending requests
+  - All jobs fetched dynamically from an external software API (explain clearly in the README how I can connect my software’s API to fetch this data).
+  - For now, use dummy data but keep API-ready structure in the code with placeholder functions or mock fetches.
+
+📁 PART 3 – JOB TABLE:
+- Create a section that shows a form with:
+  - Placeholder input: Client Invoice No
+  - Date range: From Date, To Date
+  - Show Button
+- When show is clicked, render a table like this:
+  | Job No | Job Date | Invoice Date | Destination | MBL | MBL Date | Pkg |
+- Under the table, display:
+  - File List
+  - Bill List
+  - Shipment Status
+- All of these sections will also fetch data from my software's API later. For now, use examples or mock data.
+
+🧾 PART 4 – INVOICE LIST PAGE (refer Page 2 image):
+- Same filters as above (Client Invoice No, From Date, To Date, Show Button)
+- Table format:
+  | Bill No | Bill Date | Amount |
+
+📤 PART 5 – SEND REQUEST PAGE:
+- Form where user can send a request to the admin panel of the software.
+- Form fields: Subject, Description, Upload attachment (optional), Submit button.
+
+👤 PART 6 – PROFILE & LOGOUT:
+- Simple profile view with editable user info.
+- Logout button that clears session/localStorage and returns to login page.
+
+⚙️ TECH SETUP:
+- Use React + Tailwind CSS for frontend.
+- React Router for navigation between pages.
+- localStorage or a mock auth system to simulate login state.
+- Use Axios or fetch to simulate API calls (but structure it so I can later plug in my real API).
+- Add clear README instructions explaining:
+  1. How to connect and replace dummy fetch with real software API.
+  2. Where I should insert my auth token or API key (if needed).
+  3. Which endpoints I should modify to match my real backend.
+
+💬 IMPORTANT:
+- Keep UI clean and responsive.
+- Use dummy data but keep everything API-ready.
+- Ask me if you need the sample structure of job data or API format.
+“Bro, create a mock JSON API server using json-server or Express so I can test job data fetch and filtering locally.”
+
+important 
+dont forget to create a sample signin/signup Credential
+
+
+
