@@ -15,7 +15,7 @@ export async function apiRequest(
   const method = options?.method || (data ? "POST" : "GET");
   const res = await fetch(url, {
     method,
-    headers: data ? { "Content-Type": "application/json" } : {},
+    headers: { "Content-Type": "application/json" },
     body: data ? JSON.stringify(data) : undefined,
     credentials: "include",
   });
